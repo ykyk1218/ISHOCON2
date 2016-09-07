@@ -1,6 +1,8 @@
 # ISHOCON2
 iikanji na showwin contest 2nd (like ISUCON)
 
+![](https://github.com/showwin/ISHOCON2/blob/master/doc/images/top.png)
+
 # 概要(仮)
 * ネット選挙を受け付けるWebサービス
 * 大量の投票リクエストが送られてくる
