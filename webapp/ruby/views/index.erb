@@ -5,12 +5,12 @@
 </div>
 <div class="container">
   <h2>個人の部</h2>
-  <div class="row">
+  <div id="people" class="row">
     <% candidates.each_with_index do |candidate, i| %>
       <div class="col-md-3">
         <div class="panel panel-default">
           <div class="panel-heading">
-            <p><%= "#{i < 10 ? i + 1 : '最下位'}. " %> <a href="/candidates/<%= candidate[:id] %>"><%= candidate[:name] %></a></p>
+            <p><%= "#{i < 10 ? i + 1 : '最下位'}." %> <a href="/candidates/<%= candidate[:id] %>"><%= candidate[:name] %></a></p>
           </div>
           <div class="panel-body">
             <p>得票数: <%= candidate[:count] || 0 %></p>
@@ -21,12 +21,12 @@
     <% end %>
   </div>
   <h2>政党の部</h2>
-  <div class="row">
+  <div id="parties" class="row">
     <% parties.sort { |a, b| b[1] <=> a[1] }.each_with_index do |parties, i| %>
       <div class="col-md-3">
         <div class="panel panel-default">
           <div class="panel-heading">
-            <p><%= "#{i + 1}. " %> <a href="/political_parties/<%= parties[0] %>"><%= parties[0] %></a></p>
+            <p><%= "#{i + 1}." %> <a href="/political_parties/<%= parties[0] %>"><%= parties[0] %></a></p>
           </div>
           <div class="panel-body">
             <p>得票数: <%= parties[1] || 0 %></p>
@@ -36,7 +36,7 @@
     <% end %>
   </div>
   <h2>男女比率</h2>
-  <div class="row">
+  <div id="sex_ratio" class="row">
     <div class="col-md-6">
       <div class="panel panel-default">
         <div class="panel-heading">

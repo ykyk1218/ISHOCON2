@@ -68,6 +68,10 @@ LIMIT 10
 SQL
       db.xquery(query, candidate_ids).map { |a| a[:keyword] }
     end
+
+    def db_initialize
+      db.query('DELETE FROM votes')
+    end
   end
 
   get '/' do
@@ -130,27 +134,31 @@ SQL
                      params[:mynumber]).first
     candidate = db.xquery('SELECT * FROM candidates WHERE name = ?', params[:candidate]).first
     voted_count =
-      user ? db.xquery('SELECT COUNT(*) AS count FROM votes WHERE user_id = ?', user[:id]).first[:count] : 0
+      user.nil? ? 0 : db.xquery('SELECT COUNT(*) AS count FROM votes WHERE user_id = ?', user[:id]).first[:count]
 
     candidates = db.query('SELECT * FROM candidates')
     if user.nil?
-      return erb :vote, layout: false, locals: { candidates: candidates, message: '個人情報に誤りがあります' }
-    elsif user[:votes] < params[:vote_count].to_i + voted_count
-      return erb :vote, layout: false, locals: { candidates: candidates, message: '投票数が上限を超えています' }
-    elsif params[:candidate].nil?
-      return erb :vote, layout: false, locals: { candidates: candidates, message: '候補者を記入してください' }
+      return erb :vote, locals: { candidates: candidates, message: '個人情報に誤りがあります' }
+    elsif user[:votes] < (params[:vote_count].to_i + voted_count)
+      return erb :vote, locals: { candidates: candidates, message: '投票数が上限を超えています' }
+    elsif params[:candidate].nil? || params[:candidate] == ''
+      return erb :vote, locals: { candidates: candidates, message: '候補者を記入してください' }
     elsif candidate.nil?
-      return erb :vote, layout: false, locals: { candidates: candidates, message: '候補者を正しく記入してください' }
-    elsif params[:keyword] == ''
-      return erb :vote, layout: false, locals: { candidates: candidates, message: '投票理由を記入してください' }
+      return erb :vote, locals: { candidates: candidates, message: '候補者を正しく記入してください' }
+    elsif params[:keyword].nil? || params[:keyword] == ''
+      return erb :vote, locals: { candidates: candidates, message: '投票理由を記入してください' }
     end
 
     params[:vote_count].to_i.times do
-      db.xquery('INSERT INTO votes (user_id, candidate_id, keyword) VALUES (?, ?, ?)',
+      result = db.xquery('INSERT INTO votes (user_id, candidate_id, keyword) VALUES (?, ?, ?)',
                 user[:id],
                 candidate[:id],
                 params[:keyword])
     end
     return erb :vote, locals: { candidates: candidates, message: '投票に成功しました' }
+  end
+
+  get '/initialize' do
+    db_initialize
   end
 end

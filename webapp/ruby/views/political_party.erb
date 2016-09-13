@@ -5,17 +5,17 @@
 </div>
 <div class="container">
   <div class="row">
-    <div class="jumbotron">
+    <div id="info" class="jumbotron">
       <h2>得票数</h2>
-      <p><%= votes %></p>
+      <p id="votes" ><%= votes %></p>
       <h2>候補者</h2>
-      <ul>
+      <ul id="members" >
         <% candidates.each do |candidate| %>
           <li><%= candidate[:name] %></li>
         <% end %>
       </ul>
       <h2>支持者の声</h2>
-      <ul>
+      <ul id="voices" >
         <% keywords.each do |keyword| %>
           <li><%= keyword %></li>
         <% end %>
