@@ -39,7 +39,7 @@ func setupVotes(size int, randomize bool) []Vote {
 	// size 人数分の投票者を選ぶ
 	query := "SELECT name, address, mynumber, votes FROM users WHERE id IN ("
 	for i := 0; i < size; i++ {
-		id := strconv.Itoa(getRand(1, 25000000))
+		id := strconv.Itoa(getRand(1, 4000000))
 		query = query + id + ","
 	}
 	query = query + "0)"
