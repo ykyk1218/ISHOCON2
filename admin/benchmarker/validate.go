@@ -13,7 +13,7 @@ import (
 
 // 初期化確認
 func validateInitialize() {
-	voteSet := setupVotes(150, false)
+	voteSet := setupVotes(150, true)
 	validateVote(voteSet)
 	validateVoteError(voteSet)
 	validateIndex(voteSet)

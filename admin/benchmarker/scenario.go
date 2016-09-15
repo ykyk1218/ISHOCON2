@@ -8,7 +8,7 @@ import (
 )
 
 func voteScenario(wg *sync.WaitGroup, m *sync.Mutex, finishTime time.Time) bool {
-	voteSet := setupVotes(50, true)
+	voteSet := setupVotes(50, false)
 	resps := map[bool]int{}
 	resp := true
 
@@ -25,7 +25,7 @@ func voteScenario(wg *sync.WaitGroup, m *sync.Mutex, finishTime time.Time) bool 
 }
 
 func invalidVoteScenario(wg *sync.WaitGroup, m *sync.Mutex, finishTime time.Time) bool {
-	voteSet := setupVotes(50, true)
+	voteSet := setupVotes(50, false)
 	resps := map[bool]int{}
 	resp := true
 

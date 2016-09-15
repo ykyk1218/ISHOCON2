@@ -58,7 +58,6 @@ func startBenchmark(workload int) {
 	log.Print("投票が終了しました")
 	finishTime := time.Now().Add(15 * time.Second)
 	log.Print("投票者が結果を確認しています")
-
 	for i := 0; i < workload+2; i++ {
 		wg.Add(1)
 		if i%4 == 0 || i%4 == 3 {

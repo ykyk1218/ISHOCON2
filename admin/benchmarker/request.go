@@ -79,6 +79,7 @@ func httpsRequest(method string, path string, params url.Values) int {
 
 	resp, err := client.Do(req)
 	if err != nil {
+		log.Print(err)
 		return 500
 	}
 	defer resp.Body.Close()
