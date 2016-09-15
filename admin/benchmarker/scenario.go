@@ -108,10 +108,3 @@ func updateScore(method string, resps map[bool]int, wg *sync.WaitGroup, m *sync.
 	}
 	return finished
 }
-
-func calcScore(method string, score int, response int) int {
-	if response == 200 {
-		return score + 1
-	}
-	return score - 50
-}
