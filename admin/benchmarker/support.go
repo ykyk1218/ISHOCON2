@@ -27,7 +27,7 @@ type Candidate struct {
 	Sex   string
 }
 
-func setupVotes(size int, randomize bool) []Vote {
+func setupVotes(size int, forValidate bool) []Vote {
 	var voteSet []Vote
 
 	db, err := sql.Open("mysql", "ishocon:ishocon@/ishocon2")
@@ -54,10 +54,10 @@ func setupVotes(size int, randomize bool) []Vote {
 		var strMaxVoteCount string
 		err = rows.Scan(&v.Name, &v.Address, &v.Mynumber, &strMaxVoteCount)
 		maxVoteCount, _ := strconv.Atoi(strMaxVoteCount)
-		if randomize {
-			v.VoteCount = strconv.Itoa(getRand(1, maxVoteCount))
+		if forValidate {
+			v.VoteCount = strconv.Itoa(getRand(1, 4))
 		} else {
-			v.VoteCount = strMaxVoteCount
+			v.VoteCount = strconv.Itoa(getRand(1, maxVoteCount))
 		}
 		v.Candidate = getRandCandidate()
 		v.Keyword = getRandKeyword()

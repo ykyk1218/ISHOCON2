@@ -2,7 +2,6 @@ package main
 
 import (
 	"log"
-	"net/http"
 	"net/url"
 	"os"
 	"sort"
@@ -32,22 +31,7 @@ func validateVote(voteSet []Vote) {
 		params.Add("keyword", v.Keyword)
 		params.Add("vote_count", v.VoteCount)
 
-		req, _ := http.NewRequest("POST", host+"/vote", strings.NewReader(params.Encode()))
-		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-		client := http.Client{}
-
-		resp, err := client.Do(req)
-		if err != nil {
-			log.Print("Cannot POST /vote")
-			os.Exit(1)
-		}
-		defer resp.Body.Close()
-
-		doc, err := goquery.NewDocumentFromReader(resp.Body)
-		if err != nil {
-			log.Print("Cannot POST /vote")
-			os.Exit(1)
-		}
+		doc := httpsRequestDoc("POST", "/vote", params)
 
 		// 投票が成功したことの確認
 		message := doc.Find(".text-danger").Text()
@@ -76,7 +60,7 @@ func validateVoteError(voteSet []Vote) {
 	params.Add("keyword", v1.Keyword)
 	params.Add("vote_count", "0")
 
-	doc := docOfPostVote(params)
+	doc := httpsRequestDoc("POST", "/vote", params)
 
 	// 投票が成功したことの確認
 	message := doc.Find(".text-danger").Text()
@@ -96,7 +80,7 @@ func validateVoteError(voteSet []Vote) {
 	params.Add("keyword", v2.Keyword)
 	params.Add("vote_count", "0")
 
-	doc = docOfPostVote(params)
+	doc = httpsRequestDoc("POST", "/vote", params)
 
 	// 投票が成功したことの確認
 	message = doc.Find(".text-danger").Text()
@@ -116,7 +100,7 @@ func validateVoteError(voteSet []Vote) {
 	params.Add("keyword", v3.Keyword)
 	params.Add("vote_count", "0")
 
-	doc = docOfPostVote(params)
+	doc = httpsRequestDoc("POST", "/vote", params)
 
 	// 投票が成功したことの確認
 	message = doc.Find(".text-danger").Text()
@@ -134,9 +118,9 @@ func validateVoteError(voteSet []Vote) {
 	params.Add("mynumber", v4.Mynumber)
 	params.Add("candidate", v4.Candidate)
 	params.Add("keyword", v4.Keyword)
-	params.Add("vote_count", "2")
+	params.Add("vote_count", "220")
 
-	doc = docOfPostVote(params)
+	doc = httpsRequestDoc("POST", "/vote", params)
 
 	// 投票が成功したことの確認
 	message = doc.Find(".text-danger").Text()
@@ -156,7 +140,7 @@ func validateVoteError(voteSet []Vote) {
 	params.Add("keyword", v5.Keyword)
 	params.Add("vote_count", "0")
 
-	doc = docOfPostVote(params)
+	doc = httpsRequestDoc("POST", "/vote", params)
 
 	// 投票が成功したことの確認
 	message = doc.Find(".text-danger").Text()
@@ -176,7 +160,7 @@ func validateVoteError(voteSet []Vote) {
 	params.Add("keyword", v6.Keyword)
 	params.Add("vote_count", "0")
 
-	doc = docOfPostVote(params)
+	doc = httpsRequestDoc("POST", "/vote", params)
 
 	// 投票が成功したことの確認
 	message = doc.Find(".text-danger").Text()
@@ -196,7 +180,7 @@ func validateVoteError(voteSet []Vote) {
 	params.Add("keyword", "")
 	params.Add("vote_count", "0")
 
-	doc = docOfPostVote(params)
+	doc = httpsRequestDoc("POST", "/vote", params)
 
 	// 投票が成功したことの確認
 	message = doc.Find(".text-danger").Text()
@@ -207,11 +191,7 @@ func validateVoteError(voteSet []Vote) {
 }
 
 func validateIndex(voteSet []Vote) {
-	doc, err := goquery.NewDocument(host + "/")
-	if err != nil {
-		log.Print("Cannot GET /index")
-		os.Exit(1)
-	}
+	doc := httpsRequestDoc("GET", "/", nil)
 
 	// DOM の確認
 	ppErrFlg := doc.Find("#people").Children().Size() != 11
@@ -324,11 +304,7 @@ func validateCandidate(voteSet []Vote) {
 	for i, cnd := range l {
 		if i >= l.Len()-2 {
 			cndInfo := getCndInfo(cnd.name)
-			doc, err := goquery.NewDocument(host + "/candidates/" + cndInfo.ID)
-			if err != nil {
-				log.Print("Cannot GET /candidates/:id")
-				os.Exit(1)
-			}
+			doc := httpsRequestDoc("GET", "/candidates/"+cndInfo.ID, nil)
 			doc.Find("#info p").Each(func(i int, s *goquery.Selection) {
 				str := s.Text()
 				if i == 0 {
@@ -389,11 +365,7 @@ func validateCandidate(voteSet []Vote) {
 }
 
 func validatePoliticalParty(voteSet []Vote) {
-	doc, err := goquery.NewDocument(host + "/political_parties/国民元気党")
-	if err != nil {
-		log.Print("Cannot GET /political_parties/:name")
-		os.Exit(1)
-	}
+	doc := httpsRequestDoc("GET", "/political_parties/国民元気党", nil)
 
 	var votes int
 	keyRank := map[string]int{}
@@ -452,27 +424,6 @@ func validatePoliticalParty(voteSet []Vote) {
 			}
 		}
 	})
-}
-
-func docOfPostVote(params url.Values) *goquery.Document {
-	req, _ := http.NewRequest("POST", host+"/vote", strings.NewReader(params.Encode()))
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	client := http.Client{}
-
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Print("Cannot POST /vote")
-		os.Exit(1)
-	}
-	defer resp.Body.Close()
-
-	doc, err := goquery.NewDocumentFromReader(resp.Body)
-	if err != nil {
-		log.Print("Cannot POST /vote")
-		os.Exit(1)
-	}
-
-	return doc
 }
 
 // follows for sort

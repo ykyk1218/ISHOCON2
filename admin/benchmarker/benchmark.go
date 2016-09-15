@@ -19,15 +19,20 @@ func main() {
 		fmt.Println(`Usage: ./benchmark [option]
 Options:
   --workload	N	run benchmark with N workloads (default: 3)
-  --target	HOST	specify target HOST (default: 127.0.0.1:80)`)
+  --ip	IP	specify target IP Address (default: 127.0.0.1)
+	--debug		debug mode (DO NOT USE)`)
 	}
 
 	var (
 		workload = flag.Int("workload", 3, "")
-		target   = flag.String("host", "127.0.0.1", "")
+		ip       = flag.String("ip", "127.0.0.1", "")
+		debug    = flag.Bool("debug", false, "")
 	)
 	flag.Parse()
-	host = "http://" + *target
+	host = "https://" + *ip
+	if *debug {
+		host = "http://127.0.0.1:8080"
+	}
 
 	startBenchmark(*workload)
 }
@@ -69,56 +74,41 @@ func startBenchmark(workload int) {
 }
 
 func loopInvalidVoteScenario(wg *sync.WaitGroup, m *sync.Mutex, finishTime time.Time) {
-	finished := false
 	for {
-		if finished {
+		if invalidVoteScenario(wg, m, finishTime) {
 			break
-		} else {
-			finished = invalidVoteScenario(wg, m, finishTime)
 		}
 	}
 }
 
 func loopVoteScenario(wg *sync.WaitGroup, m *sync.Mutex, finishTime time.Time) {
-	finished := false
 	for {
-		if finished {
+		if voteScenario(wg, m, finishTime) {
 			break
-		} else {
-			finished = voteScenario(wg, m, finishTime)
 		}
 	}
 }
 
 func loopIndexScenario(wg *sync.WaitGroup, m *sync.Mutex, finishTime time.Time) {
-	finished := false
 	for {
-		if finished {
+		if indexScenario(wg, m, finishTime) {
 			break
-		} else {
-			finished = indexScenario(wg, m, finishTime)
 		}
 	}
 }
 
 func loopCandidateScenario(wg *sync.WaitGroup, m *sync.Mutex, finishTime time.Time) {
-	finished := false
 	for {
-		if finished {
+		if candidateScenario(wg, m, finishTime) {
 			break
-		} else {
-			finished = candidateScenario(wg, m, finishTime)
 		}
 	}
 }
 
 func loopPoliticalPartyScenario(wg *sync.WaitGroup, m *sync.Mutex, finishTime time.Time) {
-	finished := false
 	for {
-		if finished {
+		if politicalPartyScenario(wg, m, finishTime) {
 			break
-		} else {
-			finished = politicalPartyScenario(wg, m, finishTime)
 		}
 	}
 }
