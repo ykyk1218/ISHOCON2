@@ -1,11 +1,12 @@
 # ISHOCON2マニュアル
 ## 時間制限
-あなたがISHOCON2に興味を持ち続けている間
+あなたがISHOCON2に興味を持ち続けている間。
+制限時間を設ける場合には8時間前後が良いと思います。
 
 ## インスタンスの作成
 AWSのイメージのみ作成しました。
-* アプリケーションAMI: TBW
-* ベンチマーカーAMI: TBW
+* アプリケーションAMI: `ami-fcba6b9d`
+* ベンチマーカーAMI: `ami-eb9c4d8a`
 * アプリケーション、ベンチマーカー共に以下のスペック
   * Instance Type: c4.large
   * Root Volume: 8GB, General Purpose SSD (GP2)
@@ -16,7 +17,7 @@ AWSのイメージのみ作成しました。
 * 8GB, General Purpose SSD (GP2) を選択してください。
 ![](https://raw.githubusercontent.com/showwin/ISHOCON2/master/doc/images/instance1.png)
 
-* Security Groupの設定で `TCP 22 (SSH)` と `TCP 443 (HTTPS)` を `Inbound 0.0.0.0/0` からアクセスできるようにしてください。
+* Security Groupの設定で `TCP 22 (SSH)` と `TCP 443 (HTTPS)` を `Inbound 0.0.0.0/0` からアクセスできるようにしてください。(ベンチマーカーの場合 `TCP 443 (HTTPS)` を開ける必要はありません。)
 ![](https://raw.githubusercontent.com/showwin/ISHOCON2/master/doc/images/instance2.png)
 
 * 最後の確認画面でこのようになっていればOKです。
@@ -36,7 +37,7 @@ $ sudo su - ishocon
 
 ```
 $ ls
- data    #DB初期化用のdump(後述) #TODO
+ data    #DB初期化用のdump(後述)
  webapp  #最適化するアプリケーション
 ```
 
@@ -47,8 +48,8 @@ $ cd ~/webapp/ruby
 $ unicorn -c unicorn_config.rb
 ```
 
-これでブラウザからアプリケーションが見れるようになるので、IPアドレスにアクセスしてみましょう。
-HTTPS でのみアクセスできることに注意してください。
+これでブラウザからアプリケーションが見れるようになるので、IPアドレスにアクセスしてみましょう。  
+HTTPS でのみアクセスできることに注意してください。ブラウザによっては証明書のエラーが表示されますが、無視してページを表示してください。
 
 **トップページ**
 ![トップページ](https://raw.githubusercontent.com/showwin/ISHOCON2/master/doc/images/top.png)
@@ -105,7 +106,7 @@ $ ./benchmark --ip xxx.xxx.xxx.xxx --workload 3
 
 ### スコア算出方法
 * スコアはベンチマーカーが1分間の負荷走行を行っている間にレスポンスが返された `成功レスポンス数(GET) x 2 + 成功レスポンス数(POST) x 1 - 失敗レスポンス数(200以外) x 100` により算出されます。
-* 期日前投票にて、期待しないレスポンスが返ってきた場合にはその場でベンチマーカーが停止し、スコアは表示されません。
+* 期日前投票にて、期待しないレスポンスが返ってきた場合にはその時点でベンチマーカーが停止し、スコアは表示されません。
 * 投票が1度でも失敗(200でないレスポンス)するとその時点でベンチマーカーが停止し、スコアは表示されません。投票は必ず成功する必要があります。
 
 

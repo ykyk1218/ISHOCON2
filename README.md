@@ -11,8 +11,8 @@ ISHOCONとは `Iikanjina SHOwwin CONtest` の略で、[ISUCON](http://isucon.net
 
 ## 問題詳細
 * マニュアル: [ISHOCON2マニュアル](https://github.com/showwin/ISHOCON2/blob/master/doc/manual.md)
-* アプリケーションAMI: TBW
-* ベンチマーカーAMI: TBW
+* アプリケーションAMI: `ami-fcba6b9d`
+* ベンチマーカーAMI: `ami-eb9c4d8a`
 * インスタンスタイプ: `c4.large` (アプリ、ベンチ共に)
 * 参考実装言語: Ruby
 

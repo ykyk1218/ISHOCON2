@@ -1,0 +1,18 @@
+export PATH="$HOME/.rbenv/bin:$PATH"
+eval "$(rbenv init -)"
+
+export PATH=$PATH:/usr/local/go/bin
+export GOROOT=/usr/local/go
+export GOPATH=/home/ishocon/.local/go
+
+export ISHOCON2_DB_HOST=localhost
+export ISHOCON2_DB_PORT=3306
+export ISHOCON2_DB_USER=ishocon
+export ISHOCON2_DB_PASSWORD=ishocon
+export ISHOCON2_DB_NAME=ishocon2
+
+alias ls='ls --color=auto'
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+alias grep='grep --color=auto'
