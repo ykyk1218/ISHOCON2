@@ -10,7 +10,7 @@ CREATE TABLE `users` (
   `votes` int(4) NOT null,
   PRIMARY KEY (`id`),
   UNIQUE KEY `mynumber` (`mynumber`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `candidates` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -19,7 +19,7 @@ CREATE TABLE `candidates` (
   `sex` varchar(32) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `votes` (
   `id` int(32) NOT NULL AUTO_INCREMENT,
@@ -28,4 +28,4 @@ CREATE TABLE `votes` (
   `keyword` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
