@@ -1,12 +1,13 @@
 ## アプリケーションイメージ作成手順(メモ)
-* ishocon ユーザ作成(パスワードなしで sudo 可能)
-* ruby 2.3.1 をインストール
-* Nginx と MySQL のインストール
-* 初期データの挿入
-* SSL証明書を作成して、Nginx 443 → 8080 にプロキシする
+```
+$ docker build -f Dockerfile_app . -t showwin/ishocon2_app:$version
+$ docker login
+$ docker push showwin/ishocon2_app:$version
+```
 
 ## ベンチマーカーイメージ作成手順(メモ)
-* Go のインストール
-* MySQL のインストール
-* 初期データの挿入
-* ベンチマーカーを build
+```
+$ docker build -f Dockerfile_bench . -t showwin/ishocon2_bench:$version
+$ docker login
+$ docker push showwin/ishocon2_bench:$version
+```
