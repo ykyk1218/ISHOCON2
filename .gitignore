@@ -36,3 +36,10 @@ build/
 
 *unicorn.pid
 *mysql.log
+
+__pycache__/
+*.py[cod]
+*.pyc
+*.py.bak
+.DS_Store
+.python-version

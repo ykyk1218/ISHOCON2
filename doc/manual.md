@@ -42,10 +42,19 @@ $ ls
 ```
 
 ### Web サーバーを立ち上げる
+
 #### Ruby の場合
+
 ```
 $ cd ~/webapp/ruby
 $ unicorn -c unicorn_config.rb
+```
+
+#### Python の場合
+
+```
+$ cd ~/webapp/python
+$ uwsgi --ini app.ini
 ```
 
 これでブラウザからアプリケーションが見れるようになるので、IPアドレスにアクセスしてみましょう。  

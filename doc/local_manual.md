@@ -16,6 +16,16 @@ $ docker exec -it ishocon2_app_1 /bin/bash
 
 アプリケーションの起動は [マニュアル](https://github.com/showwin/ISHOCON2/blob/master/doc/manual.md) 参照
 
+
+### Tips
+
+`docker-compose.yml` の `app` でローカルの `webapp` ディレクトリをマウントすると、ローカルのファイル変更がすぐに反映されるので便利です。
+```
+  app:
+    volumes:
+      - ./webapp:/home/ishocon/webapp
+```
+
 ## ベンチマーカー
 
 ```
