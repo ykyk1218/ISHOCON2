@@ -40,6 +40,15 @@ RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv && \
     pyenv install 3.6.5 && pyenv global 3.6.5 && \
     cd && curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && python get-pip.py && rm get-pip.py
 
+# Go のインストール
+RUN sudo wget https://dl.google.com/go/go1.10.2.linux-amd64.tar.gz && \
+    sudo tar -C /usr/local -xzf go1.10.2.linux-amd64.tar.gz && \
+    sudo rm go1.10.2.linux-amd64.tar.gz
+ENV PATH $PATH:/usr/local/go/bin
+ENV GOROOT /usr/local/go
+ENV GOPATH $HOME/.local/go
+ENV PATH $PATH:$GOROOT/bin
+
 # アプリケーション
 RUN mkdir /home/ishocon/data /home/ishocon/webapp
 COPY admin/ishocon2.dump.tar.bz2 /home/ishocon/data/ishocon2.dump.tar.bz2
