@@ -57,6 +57,15 @@ $ cd ~/webapp/python
 $ uwsgi --ini app.ini
 ```
 
+#### Go の場合
+
+```
+$ cd ~/webapp/go
+$ go get -t -d -v ./...
+$ go build -o webapp *.go
+$ ./webapp
+```
+
 これでブラウザからアプリケーションが見れるようになるので、IPアドレスにアクセスしてみましょう。  
 HTTPS でのみアクセスできることに注意してください。ブラウザによっては証明書のエラーが表示されますが、無視してページを表示してください。
 
