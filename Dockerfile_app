@@ -4,7 +4,7 @@ MAINTAINER showwin <showwin_kmc@yahoo.co.jp>
 ENV LANG en_US.UTF-8
 
 RUN apt-get update
-RUN apt-get install -y wget sudo less vim
+RUN apt-get install -y wget sudo less vim tzdata
 
 # ishocon ユーザ作成
 RUN groupadd -g 1001 ishocon && \
@@ -48,6 +48,9 @@ ENV PATH $PATH:/usr/local/go/bin
 ENV GOROOT /usr/local/go
 ENV GOPATH $HOME/.local/go
 ENV PATH $PATH:$GOROOT/bin
+
+# PHP のインストール
+RUN sudo apt install -y php php-fpm php-mysql
 
 # アプリケーション
 RUN mkdir /home/ishocon/data /home/ishocon/webapp
