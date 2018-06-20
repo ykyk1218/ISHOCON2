@@ -15,7 +15,7 @@ ISHOCONとは `Iikanjina SHOwwin CONtest` の略で、[ISUCON](http://isucon.net
 * ベンチマーカーAMI: `ami-eb9c4d8a`
 * インスタンスタイプ: `c4.large` (アプリ、ベンチ共に)
 * 参考実装言語: Ruby, Python, Go
-* 推奨実施時間: 1人で5時間
+* 推奨実施時間: 1人で8時間
 
 * AWSではなく手元で実行したい場合には [Docker を使ってローカルで環境を整える](https://github.com/showwin/ISHOCON2/blob/master/doc/local_manual.md) をご覧ください。
 
