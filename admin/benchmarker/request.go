@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/PuerkitoBio/goquery"
+	"golang.org/x/net/http2"
 )
 
 func getInitialize() {
@@ -74,6 +75,9 @@ func httpsRequest(method string, path string, params url.Values) int {
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
+	if err := http2.ConfigureTransport(tr); err != nil {
+		log.Fatalf("Failed to configure h2 transport: %s", err)
+	}
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	client := http.Client{Transport: tr}
 
@@ -91,6 +95,9 @@ func httpsRequestDoc(method string, path string, params url.Values) *goquery.Doc
 	req, _ := http.NewRequest(method, host+path, strings.NewReader(params.Encode()))
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+	if err := http2.ConfigureTransport(tr); err != nil {
+		log.Fatalf("Failed to configure h2 transport: %s", err)
 	}
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	client := http.Client{Transport: tr}
