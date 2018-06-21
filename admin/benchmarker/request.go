@@ -4,6 +4,7 @@ package main
 import (
 	"crypto/tls"
 	"log"
+	"math/rand"
 	"net/http"
 	"net/url"
 	"os"
@@ -70,16 +71,26 @@ func getCSS() bool {
 	return false
 }
 
+var clients []http.Client
+
+func createClients(size int) {
+	clients = make([]http.Client, size)
+	for i := 0; i < size; i++ {
+		tr := &http.Transport{
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		}
+		if err := http2.ConfigureTransport(tr); err != nil {
+			log.Fatalf("Failed to configure h2 transport: %s", err)
+		}
+		clients[i] = http.Client{Transport: tr}
+	}
+	rand.Seed(time.Now().Unix())
+}
+
 func httpsRequest(method string, path string, params url.Values) int {
 	req, _ := http.NewRequest(method, host+path, strings.NewReader(params.Encode()))
-	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-	}
-	if err := http2.ConfigureTransport(tr); err != nil {
-		log.Fatalf("Failed to configure h2 transport: %s", err)
-	}
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	client := http.Client{Transport: tr}
+	client := clients[rand.Intn(len(clients))]
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -93,14 +104,8 @@ func httpsRequest(method string, path string, params url.Values) int {
 
 func httpsRequestDoc(method string, path string, params url.Values) *goquery.Document {
 	req, _ := http.NewRequest(method, host+path, strings.NewReader(params.Encode()))
-	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-	}
-	if err := http2.ConfigureTransport(tr); err != nil {
-		log.Fatalf("Failed to configure h2 transport: %s", err)
-	}
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	client := http.Client{Transport: tr}
+	client := clients[rand.Intn(len(clients))]
 
 	resp, err := client.Do(req)
 	if err != nil {
