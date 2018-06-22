@@ -51,7 +51,7 @@ ENV PATH $PATH:$GOROOT/bin
 
 # PHP のインストール
 RUN sudo mkdir /run/php
-RUN sudo apt install -y php php-fpm php-mysql
+RUN sudo apt install -y php php-fpm php-mysql php-cli
 
 # アプリケーション
 RUN mkdir /home/ishocon/data /home/ishocon/webapp
