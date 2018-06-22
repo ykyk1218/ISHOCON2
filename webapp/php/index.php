@@ -22,7 +22,7 @@ function getPDO()
     return $pdo;
 }
 
-function election_results(): array
+function election_results()
 {
     $stmt = getPDO()->query('
 SELECT c.id, c.name, c.political_party, c.sex, v.count
@@ -36,7 +36,7 @@ ORDER BY v.count DESC');
     return $stmt->fetchAll();
 }
 
-function voice_of_supporter(array $ids): array
+function voice_of_supporter($ids)
 {
     $stmt = getPDO()->prepare('
 SELECT keyword
