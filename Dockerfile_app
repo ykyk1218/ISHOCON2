@@ -50,6 +50,7 @@ ENV GOPATH $HOME/.local/go
 ENV PATH $PATH:$GOROOT/bin
 
 # PHP のインストール
+RUN sudo mkdir /run/php
 RUN sudo apt install -y php php-fpm php-mysql
 
 # アプリケーション
