@@ -4,7 +4,7 @@
 
 ```
 sudo apt update
-sudo apt install php5 php5-fpm php5-mysql php5-cli
+sudo apt install -y php php-cli php-fpm php-mysql
 ```
 
 ## composerのインストール(https://getcomposer.org/download/)
@@ -25,23 +25,11 @@ php composer.phar install
 ## nginx.confの書き換え
 
 ```
-vim webapp/php/php-nginx.conf
-(
-    fastcgi_passをphp-fpmのsockがあるところに書き換える
-    AMIの場合はunix:/run/php5-fpm.sock
-    fastcgi_pass   unix:/run/php5-fpm.sock;
-)
 (
     /etc/nginx/nginx.confのバックアップ
 )
 sudo cp webapp/php/php-nginx.conf /etc/nginx/nginx.conf
 sudo service nginx reload
-```
-
-## php-fpmの再起動
-
-```
-sudo service php5-fpm restart
 ```
 
 # Docker環境でのPHPの動かし方
@@ -64,12 +52,6 @@ php composer.phar install
 ## nginx.confの書き換え
 
 ```
-vim webapp/php/php-nginx.conf
-(
-    fastcgi_passをphp-fpmのsockがあるところに書き換える
-    Docker環境の場合はunix:/var/run/php/php7.2-fpm.sock
-    fastcgi_pass   unix:/var/run/php/php7.2-fpm.sock;
-)
 (
     /etc/nginx/nginx.confのバックアップ
 )
