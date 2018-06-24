@@ -1,0 +1,18 @@
+{
+  "name": "ishocon2",
+  "version": "1.0.0",
+  "description": "Iikanjina SHOwwin CONtest",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ishocon"
+  ],
+  "author": "Goryudyuma",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^2.6.1",
+    "express": "^4.16.3"
+  }
+}
