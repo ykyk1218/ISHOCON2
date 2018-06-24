@@ -1,9 +1,7 @@
 version: '3.0'
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile_app
+    image: showwin/ishocon2_app:latest
     command: /docker/start_app.sh
     volumes:
       - storage_app:/var/lib/mysql
@@ -17,9 +15,7 @@ services:
       - /var/lib/mysql
 
   bench:
-    build:
-      context: .
-      dockerfile: Dockerfile_bench
+    image: showwin/ishocon2_bench:latest
     command: /docker/start_bench.sh
     volumes:
       - storage_bench:/var/lib/mysql
