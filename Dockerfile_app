@@ -59,9 +59,15 @@ COPY admin/ishocon2.dump.tar.bz2 /home/ishocon/data/ishocon2.dump.tar.bz2
 COPY webapp/ /home/ishocon/webapp
 COPY admin/config/bashrc /home/ishocon/.bashrc
 
+# ライブラリのインストール
 RUN cd /home/ishocon/webapp/ruby && sudo gem install bundler && bundle install
 RUN LC_ALL=C.UTF-8 && LANG=C.UTF-8 && cd /home/ishocon/webapp/python && \
     /home/ishocon/.pyenv/shims/pip install -r requirements.txt
+RUN cd /home/ishocon/webapp/php && \
+    sudo php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
+    sudo php composer-setup.php && \
+    sudo php -r "unlink('composer-setup.php');" && \
+    sudo php ./composer.phar install
 
 COPY docker/start_app.sh /docker/start_app.sh
 
