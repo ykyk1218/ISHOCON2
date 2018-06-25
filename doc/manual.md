@@ -73,6 +73,14 @@ $ cd ~/webapp/php
 $ cat README.md
 ```
 
+#### NodeJS の場合
+
+```
+$ cd ~/webapp/nodejs
+$ npm install
+$ node index.js
+```
+
 これでブラウザからアプリケーションが見れるようになるので、IPアドレスにアクセスしてみましょう。  
 HTTPS でのみアクセスできることに注意してください。ブラウザによっては証明書のエラーが表示されますが、無視してページを表示してください。
 
