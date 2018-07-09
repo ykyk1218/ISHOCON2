@@ -16,7 +16,7 @@ Database = DB.open "mysql://#{ENV["ISHOCON2_DB_USER"]}#{ENV["ISHOCON2_DB_PASSWOR
 public_folder "public"
 
 Kemal::Session.config do |config|
-	config.secret = ENV["ISHOCON2_SESSION_SECRET"]? || "showwin_happy"
+  config.secret = ENV["ISHOCON2_SESSION_SECRET"]? || "showwin_happy"
 end
 
 class CandidateWithCount
