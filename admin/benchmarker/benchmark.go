@@ -1,41 +1,41 @@
 package main
 
 import (
-	"flag"
+	"context"
 	"fmt"
 	"log"
 	"strconv"
 	"sync"
 	"time"
+
+	"github.com/aws/aws-lambda-go/lambda"
 )
 
 var host = "http://127.0.0.1"
 var totalScore = 0
 var totalResp = map[bool]int{}
-var finished = false
+
+type myEvent struct {
+	Workload int    `json:"workload"`
+	IP       string `json:"ip"`
+	Username string `json:"username"`
+}
 
 func main() {
-	flag.Usage = func() {
-		fmt.Println(`Usage: ./benchmark [option]
-Options:
-  --workload	N	run benchmark with N workloads (default: 3)
-  --ip	IP	specify target IP Address (default: 127.0.0.1)
-	--debug		debug mode (DO NOT USE)`)
-	}
+	lambda.Start(HandleRequest)
+}
 
-	var (
-		workload = flag.Int("workload", 3, "")
-		ip       = flag.String("ip", "127.0.0.1", "")
-		debug    = flag.Bool("debug", false, "")
-	)
-	flag.Parse()
-	host = "https://" + *ip
-	if *debug {
-		host = "http://127.0.0.1:8080"
-	}
+// HandleRequest handler
+func HandleRequest(ctx context.Context, event myEvent) (string, error) {
+	workload := event.Workload
+	ip := event.IP
+	host = "https://" + ip
+	username := event.Username
 
-	createClients(*workload * 5)
-	startBenchmark(*workload)
+	createClients(workload * 5)
+	startBenchmark(workload)
+
+	return fmt.Sprintf("Done %s", username), nil
 }
 
 func startBenchmark(workload int) {
@@ -45,72 +45,87 @@ func startBenchmark(workload int) {
 	log.Print("期日前投票が終了しました")
 	log.Print("投票を開始します  Workload: " + strconv.Itoa(workload))
 	voteTime := time.Now().Add(45 * time.Second)
-	wg := new(sync.WaitGroup)
+	wg1 := new(sync.WaitGroup)
 	m := new(sync.Mutex)
 	for i := 0; i < workload+1; i++ {
-		wg.Add(1)
+		wg1.Add(1)
 		if i%5 == 0 {
-			go loopInvalidVoteScenario(wg, m, voteTime)
+			go loopInvalidVoteScenario(wg1, m, voteTime)
 		} else {
-			go loopVoteScenario(wg, m, voteTime)
+			go loopVoteScenario(wg1, m, voteTime)
 		}
 	}
-	wg.Wait()
+	wg1.Wait()
 	log.Print("投票が終了しました")
+	wg2 := new(sync.WaitGroup)
 	finishTime := time.Now().Add(15 * time.Second)
 	log.Print("投票者が結果を確認しています")
 	for i := 0; i < workload+2; i++ {
-		wg.Add(1)
+		wg2.Add(1)
 		if i%4 == 0 || i%4 == 3 {
-			go loopIndexScenario(wg, m, finishTime)
+			go loopIndexScenario(wg2, m, finishTime)
 		} else if i%4 == 1 {
-			go loopCandidateScenario(wg, m, finishTime)
+			go loopCandidateScenario(wg2, m, finishTime)
 		} else {
-			go loopPoliticalPartyScenario(wg, m, finishTime)
+			go loopPoliticalPartyScenario(wg2, m, finishTime)
 		}
 	}
-	wg.Wait()
+	wg2.Wait()
 	printScore()
 }
 
 func loopInvalidVoteScenario(wg *sync.WaitGroup, m *sync.Mutex, finishTime time.Time) {
 	for {
-		if invalidVoteScenario(wg, m, finishTime) {
+		if invalidVoteScenario(wg, m, finishTime) == false {
 			break
 		}
 	}
+	defer wg.Done()
 }
 
 func loopVoteScenario(wg *sync.WaitGroup, m *sync.Mutex, finishTime time.Time) {
 	for {
-		if voteScenario(wg, m, finishTime) {
+		if voteScenario(wg, m, finishTime) == false {
 			break
 		}
 	}
+	defer wg.Done()
 }
 
 func loopIndexScenario(wg *sync.WaitGroup, m *sync.Mutex, finishTime time.Time) {
+	log.Print("start")
 	for {
-		if indexScenario(wg, m, finishTime) {
+		log.Print("in for")
+		if indexScenario(wg, m, finishTime) == false {
 			break
 		}
 	}
+	defer log.Print("done")
+	defer wg.Done()
 }
 
 func loopCandidateScenario(wg *sync.WaitGroup, m *sync.Mutex, finishTime time.Time) {
+	log.Print("start")
 	for {
-		if candidateScenario(wg, m, finishTime) {
+		log.Print("in for")
+		if candidateScenario(wg, m, finishTime) == false {
 			break
 		}
 	}
+	defer log.Print("done")
+	defer wg.Done()
 }
 
 func loopPoliticalPartyScenario(wg *sync.WaitGroup, m *sync.Mutex, finishTime time.Time) {
+	log.Print("start")
 	for {
-		if politicalPartyScenario(wg, m, finishTime) {
+		log.Print("in for")
+		if politicalPartyScenario(wg, m, finishTime) == false {
 			break
 		}
 	}
+	defer log.Print("done")
+	defer wg.Done()
 }
 
 func printScore() {

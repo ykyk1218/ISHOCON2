@@ -89,7 +89,7 @@ func politicalPartyScenario(wg *sync.WaitGroup, m *sync.Mutex, finishTime time.T
 }
 
 // 以下、スコア計算用
-func updateScore(method string, resps map[bool]int, wg *sync.WaitGroup, m *sync.Mutex, finishTime time.Time) (finished bool) {
+func updateScore(method string, resps map[bool]int, wg *sync.WaitGroup, m *sync.Mutex, finishTime time.Time) (isContinue bool) {
 	m.Lock()
 	defer m.Unlock()
 	if method == "GET" {
@@ -101,10 +101,9 @@ func updateScore(method string, resps map[bool]int, wg *sync.WaitGroup, m *sync.
 	totalResp[true] = totalResp[true] + resps[true]
 	totalResp[false] = totalResp[false] + resps[false]
 	if time.Now().After(finishTime) {
-		finished = true
-		wg.Done()
+		isContinue = false
 	} else {
-		finished = false
+		isContinue = true
 	}
-	return finished
+	return isContinue
 }

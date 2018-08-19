@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"math/rand"
+	"os"
 	"strconv"
 	"time"
 
@@ -27,10 +28,17 @@ type Candidate struct {
 	Sex   string
 }
 
+func getDBClient() (*sql.DB, error) {
+	username := os.Getenv("MYSQL_USER")
+	pass := os.Getenv("MYSQL_PASS")
+	dbHost := os.Getenv("MYSQL_HOST")
+	return sql.Open("mysql", username+":"+pass+"@tcp("+dbHost+":3306)/ishocon2")
+}
+
 func setupVotes(size int, forValidate bool) []Vote {
 	var voteSet []Vote
 
-	db, err := sql.Open("mysql", "ishocon:ishocon@/ishocon2")
+	db, err := getDBClient()
 	if err != nil {
 		panic(err.Error())
 	}
@@ -139,7 +147,7 @@ func getRandKeyword() string {
 }
 
 func getCndInfo(name string) Candidate {
-	db, err := sql.Open("mysql", "ishocon:ishocon@/ishocon2")
+	db, err := getDBClient()
 	if err != nil {
 		panic(err.Error())
 	}
@@ -155,7 +163,7 @@ func getCndInfo(name string) Candidate {
 
 // 候補者名から政党名を返す
 func getPatryInfo(name string) string {
-	db, err := sql.Open("mysql", "ishocon:ishocon@/ishocon2")
+	db, err := getDBClient()
 	if err != nil {
 		panic(err.Error())
 	}
@@ -170,7 +178,7 @@ func getPatryInfo(name string) string {
 }
 
 func membersOf(party string) (members []string) {
-	db, err := sql.Open("mysql", "ishocon:ishocon@/ishocon2")
+	db, err := getDBClient()
 	if err != nil {
 		panic(err.Error())
 	}
