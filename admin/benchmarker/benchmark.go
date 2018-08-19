@@ -46,28 +46,29 @@ func startBenchmark(workload int) {
 	log.Print("投票を開始します  Workload: " + strconv.Itoa(workload))
 	voteTime := time.Now().Add(45 * time.Second)
 	wg1 := new(sync.WaitGroup)
-	m := new(sync.Mutex)
+	m1 := new(sync.Mutex)
 	for i := 0; i < workload+1; i++ {
 		wg1.Add(1)
 		if i%5 == 0 {
-			go loopInvalidVoteScenario(wg1, m, voteTime)
+			go loopInvalidVoteScenario(wg1, m1, voteTime)
 		} else {
-			go loopVoteScenario(wg1, m, voteTime)
+			go loopVoteScenario(wg1, m1, voteTime)
 		}
 	}
 	wg1.Wait()
 	log.Print("投票が終了しました")
-	wg2 := new(sync.WaitGroup)
 	finishTime := time.Now().Add(15 * time.Second)
+	wg2 := new(sync.WaitGroup)
+	m2 := new(sync.Mutex)
 	log.Print("投票者が結果を確認しています")
 	for i := 0; i < workload+2; i++ {
 		wg2.Add(1)
 		if i%4 == 0 || i%4 == 3 {
-			go loopIndexScenario(wg2, m, finishTime)
+			go loopIndexScenario(wg2, m2, finishTime)
 		} else if i%4 == 1 {
-			go loopCandidateScenario(wg2, m, finishTime)
+			go loopCandidateScenario(wg2, m2, finishTime)
 		} else {
-			go loopPoliticalPartyScenario(wg2, m, finishTime)
+			go loopPoliticalPartyScenario(wg2, m2, finishTime)
 		}
 	}
 	wg2.Wait()
@@ -76,7 +77,7 @@ func startBenchmark(workload int) {
 
 func loopInvalidVoteScenario(wg *sync.WaitGroup, m *sync.Mutex, finishTime time.Time) {
 	for {
-		if invalidVoteScenario(wg, m, finishTime) == false {
+		if invalidVoteScenario(m, finishTime) == false {
 			break
 		}
 	}
@@ -85,7 +86,7 @@ func loopInvalidVoteScenario(wg *sync.WaitGroup, m *sync.Mutex, finishTime time.
 
 func loopVoteScenario(wg *sync.WaitGroup, m *sync.Mutex, finishTime time.Time) {
 	for {
-		if voteScenario(wg, m, finishTime) == false {
+		if voteScenario(m, finishTime) == false {
 			break
 		}
 	}
@@ -96,7 +97,7 @@ func loopIndexScenario(wg *sync.WaitGroup, m *sync.Mutex, finishTime time.Time) 
 	log.Print("start")
 	for {
 		log.Print("in for")
-		if indexScenario(wg, m, finishTime) == false {
+		if indexScenario(m, finishTime) == false {
 			break
 		}
 	}
@@ -105,26 +106,20 @@ func loopIndexScenario(wg *sync.WaitGroup, m *sync.Mutex, finishTime time.Time) 
 }
 
 func loopCandidateScenario(wg *sync.WaitGroup, m *sync.Mutex, finishTime time.Time) {
-	log.Print("start")
 	for {
-		log.Print("in for")
-		if candidateScenario(wg, m, finishTime) == false {
+		if candidateScenario(m, finishTime) == false {
 			break
 		}
 	}
-	defer log.Print("done")
 	defer wg.Done()
 }
 
 func loopPoliticalPartyScenario(wg *sync.WaitGroup, m *sync.Mutex, finishTime time.Time) {
-	log.Print("start")
 	for {
-		log.Print("in for")
-		if politicalPartyScenario(wg, m, finishTime) == false {
+		if politicalPartyScenario(m, finishTime) == false {
 			break
 		}
 	}
-	defer log.Print("done")
 	defer wg.Done()
 }
 
