@@ -1,8 +1,10 @@
 package main
 
 import (
+	"bytes"
 	"database/sql"
 	"math/rand"
+	"net/http"
 	"os"
 	"strconv"
 	"time"
@@ -29,10 +31,28 @@ type Candidate struct {
 }
 
 func getDBClient() (*sql.DB, error) {
-	username := os.Getenv("MYSQL_USER")
-	pass := os.Getenv("MYSQL_PASS")
+	dbUser := os.Getenv("MYSQL_USER")
+	dbPass := os.Getenv("MYSQL_PASS")
 	dbHost := os.Getenv("MYSQL_HOST")
-	return sql.Open("mysql", username+":"+pass+"@tcp("+dbHost+":3306)/ishocon2")
+	return sql.Open("mysql", dbUser+":"+dbPass+"@tcp("+dbHost+":3306)/ishocon2")
+}
+
+func postMessage(message string) {
+	now := time.Now().Unix()
+	jsonStr := `{"content":"` + message + `","timestamp":"` + strconv.FormatInt(now, 10) + `"}`
+	req, _ := http.NewRequest("POST",
+		"https://ishocon2.firebaseio.com/messages/"+username+".json",
+		bytes.NewBuffer([]byte(jsonStr)))
+	req.Header.Set("Content-Type", "application/json")
+	client := clients[rand.Intn(len(clients))]
+
+	client.Do(req)
+}
+
+func flushMessage() {
+	req, _ := http.NewRequest("DELETE", "https://ishocon2.firebaseio.com/messages/"+username+".json", nil)
+	client := clients[rand.Intn(len(clients))]
+	client.Do(req)
 }
 
 func setupVotes(size int, forValidate bool) []Vote {

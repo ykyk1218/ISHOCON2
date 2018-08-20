@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"os"
 	"sync"
 	"time"
@@ -16,7 +15,7 @@ func voteScenario(m *sync.Mutex, finishTime time.Time) bool {
 		resp = postVote(vote)
 		resps[resp]++
 		if resp == false {
-			log.Print("投票に失敗しました at POST /vote")
+			postMessage("投票に失敗しました at POST /vote")
 			os.Exit(1)
 		}
 	}
@@ -41,7 +40,7 @@ func invalidVoteScenario(m *sync.Mutex, finishTime time.Time) bool {
 		resp = postVote(vote)
 		resps[resp]++
 		if resp == false {
-			log.Print("投票に失敗しました at POST /vote")
+			postMessage("投票に失敗しました at POST /vote")
 			os.Exit(1)
 		}
 	}

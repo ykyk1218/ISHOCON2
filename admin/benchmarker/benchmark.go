@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"log"
 	"strconv"
 	"sync"
 	"time"
@@ -12,6 +11,7 @@ import (
 )
 
 var host = "http://127.0.0.1"
+var username = ""
 var totalScore = 0
 var totalResp = map[bool]int{}
 
@@ -30,7 +30,7 @@ func HandleRequest(ctx context.Context, event myEvent) (string, error) {
 	workload := event.Workload
 	ip := event.IP
 	host = "https://" + ip
-	username := event.Username
+	username = event.Username
 
 	createClients(workload * 5)
 	startBenchmark(workload)
@@ -39,11 +39,12 @@ func HandleRequest(ctx context.Context, event myEvent) (string, error) {
 }
 
 func startBenchmark(workload int) {
+	flushMessage()
 	getInitialize()
-	log.Print("期日前投票を開始します")
+	postMessage("期日前投票を開始します")
 	validateInitialize()
-	log.Print("期日前投票が終了しました")
-	log.Print("投票を開始します  Workload: " + strconv.Itoa(workload))
+	postMessage("期日前投票が終了しました")
+	postMessage("投票を開始します  Workload: " + strconv.Itoa(workload))
 	voteTime := time.Now().Add(45 * time.Second)
 	wg1 := new(sync.WaitGroup)
 	m1 := new(sync.Mutex)
@@ -56,11 +57,11 @@ func startBenchmark(workload int) {
 		}
 	}
 	wg1.Wait()
-	log.Print("投票が終了しました")
+	postMessage("投票が終了しました")
 	finishTime := time.Now().Add(15 * time.Second)
 	wg2 := new(sync.WaitGroup)
 	m2 := new(sync.Mutex)
-	log.Print("投票者が結果を確認しています")
+	postMessage("投票者が結果を確認しています")
 	for i := 0; i < workload+2; i++ {
 		wg2.Add(1)
 		if i%4 == 0 || i%4 == 3 {
@@ -94,14 +95,11 @@ func loopVoteScenario(wg *sync.WaitGroup, m *sync.Mutex, finishTime time.Time) {
 }
 
 func loopIndexScenario(wg *sync.WaitGroup, m *sync.Mutex, finishTime time.Time) {
-	log.Print("start")
 	for {
-		log.Print("in for")
 		if indexScenario(m, finishTime) == false {
 			break
 		}
 	}
-	defer log.Print("done")
 	defer wg.Done()
 }
 
@@ -124,6 +122,6 @@ func loopPoliticalPartyScenario(wg *sync.WaitGroup, m *sync.Mutex, finishTime ti
 }
 
 func printScore() {
-	log.Print("投票者の感心がなくなりました")
-	log.Print("{\"score\": " + strconv.Itoa(totalScore) + ", \"success\": " + strconv.Itoa(totalResp[true]) + ", \"failure\": " + strconv.Itoa(totalResp[false]) + "}")
+	postMessage("投票者の感心がなくなりました")
+	postMessage("score: " + strconv.Itoa(totalScore) + ", success: " + strconv.Itoa(totalResp[true]) + ", failure: " + strconv.Itoa(totalResp[false]))
 }
