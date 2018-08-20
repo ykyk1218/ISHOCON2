@@ -124,4 +124,5 @@ func loopPoliticalPartyScenario(wg *sync.WaitGroup, m *sync.Mutex, finishTime ti
 func printScore() {
 	postMessage("投票者の感心がなくなりました")
 	postMessage("score: " + strconv.Itoa(totalScore) + ", success: " + strconv.Itoa(totalResp[true]) + ", failure: " + strconv.Itoa(totalResp[false]))
+	postResult(totalScore, totalResp[true], totalResp[false])
 }

@@ -49,6 +49,21 @@ func postMessage(message string) {
 	client.Do(req)
 }
 
+func postResult(score int, success int, failure int) {
+	now := time.Now().Unix()
+	jsonStr := `{"score":"` + strconv.Itoa(totalScore) +
+		`","success":"` + strconv.Itoa(success) +
+		`","failure":"` + strconv.Itoa(failure) +
+		`","timestamp":"` + strconv.FormatInt(now, 10) + `"}`
+	req, _ := http.NewRequest("POST",
+		"https://ishocon2.firebaseio.com/teams/"+username+".json",
+		bytes.NewBuffer([]byte(jsonStr)))
+	req.Header.Set("Content-Type", "application/json")
+	client := clients[rand.Intn(len(clients))]
+
+	client.Do(req)
+}
+
 func flushMessage() {
 	req, _ := http.NewRequest("DELETE", "https://ishocon2.firebaseio.com/messages/"+username+".json", nil)
 	client := clients[rand.Intn(len(clients))]
