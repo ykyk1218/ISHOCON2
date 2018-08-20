@@ -77,48 +77,48 @@ func startBenchmark(workload int) {
 }
 
 func loopInvalidVoteScenario(wg *sync.WaitGroup, m *sync.Mutex, finishTime time.Time) {
+	defer wg.Done()
 	for {
 		if invalidVoteScenario(m, finishTime) == false {
 			break
 		}
 	}
-	defer wg.Done()
 }
 
 func loopVoteScenario(wg *sync.WaitGroup, m *sync.Mutex, finishTime time.Time) {
+	defer wg.Done()
 	for {
 		if voteScenario(m, finishTime) == false {
 			break
 		}
 	}
-	defer wg.Done()
 }
 
 func loopIndexScenario(wg *sync.WaitGroup, m *sync.Mutex, finishTime time.Time) {
+	defer wg.Done()
 	for {
 		if indexScenario(m, finishTime) == false {
 			break
 		}
 	}
-	defer wg.Done()
 }
 
 func loopCandidateScenario(wg *sync.WaitGroup, m *sync.Mutex, finishTime time.Time) {
+	defer wg.Done()
 	for {
 		if candidateScenario(m, finishTime) == false {
 			break
 		}
 	}
-	defer wg.Done()
 }
 
 func loopPoliticalPartyScenario(wg *sync.WaitGroup, m *sync.Mutex, finishTime time.Time) {
+	defer wg.Done()
 	for {
 		if politicalPartyScenario(m, finishTime) == false {
 			break
 		}
 	}
-	defer wg.Done()
 }
 
 func printScore() {
