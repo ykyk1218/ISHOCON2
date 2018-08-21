@@ -31,6 +31,7 @@ func HandleRequest(ctx context.Context, event myEvent) (string, error) {
 	ip := event.IP
 	host = "https://" + ip
 	username = event.Username
+	fmt.Println("START user=" + event.Username + ", ip=" + event.IP + ", workload=" + strconv.Itoa(workload))
 
 	createClients(workload * 5)
 	startBenchmark(workload)

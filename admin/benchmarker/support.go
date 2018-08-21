@@ -51,10 +51,10 @@ func postMessage(message string) {
 
 func postResult(score int, success int, failure int) {
 	now := time.Now().Unix()
-	jsonStr := `{"score":"` + strconv.Itoa(totalScore) +
-		`","success":"` + strconv.Itoa(success) +
-		`","failure":"` + strconv.Itoa(failure) +
-		`","timestamp":"` + strconv.FormatInt(now, 10) + `"}`
+	jsonStr := `{"score":` + strconv.Itoa(totalScore) +
+		`,"success":` + strconv.Itoa(success) +
+		`,"failure":` + strconv.Itoa(failure) +
+		`,"timestamp":` + strconv.FormatInt(now, 10) + `}`
 	req, _ := http.NewRequest("POST",
 		"https://ishocon2.firebaseio.com/teams/"+username+".json",
 		bytes.NewBuffer([]byte(jsonStr)))
