@@ -19,13 +19,13 @@ RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv && \
     pyenv install 3.6.5 && pyenv global 3.6.5 && \
     cd && curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && python get-pip.py && rm get-pip.py
 
-COPY admin/bench_app /root/bench_app
 COPY admin/benchmarker /root/benchmarker
 COPY admin/config/bashrc /root/.bashrc
 
 # build benchmark
 RUN cd /root && go get -t -d -v ./... && go build -o benchmark benchmarker/*.go
 
+COPY admin/bench_app /root/bench_app
 RUN LC_ALL=C.UTF-8 && LANG=C.UTF-8 && cd /root/bench_app && \
     /root/.pyenv/shims/pip install -r requirements.txt
 
