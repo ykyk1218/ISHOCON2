@@ -21,3 +21,11 @@ $ docker build -f Dockerfile_bench . -t showwin/ishocon2_bench:$version
 $ docker login
 $ docker push showwin/ishocon2_bench:$version
 ```
+
+
+## コンテスト用ベンチマーカーイメージ
+```
+$ docker build -f Dockerfile_bench . -t showwin/ishocon2_bench_for_contest
+$ docker login
+$ docker push showwin/ishocon2_bench_for_contest
+```

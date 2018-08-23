@@ -1,13 +1,11 @@
 package main
 
 import (
-	"context"
+	"flag"
 	"fmt"
 	"strconv"
 	"sync"
 	"time"
-
-	"github.com/aws/aws-lambda-go/lambda"
 )
 
 var host = "http://127.0.0.1"
@@ -22,21 +20,29 @@ type myEvent struct {
 }
 
 func main() {
-	lambda.Start(HandleRequest)
-}
+	flag.Usage = func() {
+		fmt.Println(`Usage: ./benchmark [option]
+Options:
+  --workload	N	run benchmark with N workloads (default: 3)
+  --ip	IP	specify target IP Address (default: 127.0.0.1)
+	--debug		debug mode (DO NOT USE)`)
+	}
 
-// HandleRequest handler
-func HandleRequest(ctx context.Context, event myEvent) (string, error) {
-	workload := event.Workload
-	ip := event.IP
-	host = "https://" + ip
-	username = event.Username
-	fmt.Println("START user=" + event.Username + ", ip=" + event.IP + ", workload=" + strconv.Itoa(workload))
+	var (
+		workload = flag.Int("workload", 3, "")
+		ip       = flag.String("ip", "127.0.0.1", "")
+		name     = flag.String("name", "", "")
+		debug    = flag.Bool("debug", false, "")
+	)
+	flag.Parse()
+	username = *name
+	host = "https://" + *ip
+	if *debug {
+		host = "http://127.0.0.1:8080"
+	}
 
-	createClients(workload * 5)
-	startBenchmark(workload)
-
-	return fmt.Sprintf("Done %s", username), nil
+	createClients(*workload * 5)
+	startBenchmark(*workload)
 }
 
 func startBenchmark(workload int) {
