@@ -5,7 +5,7 @@
 
 ## インスタンスの作成
 AWSのイメージのみ作成しました。
-* アプリケーションAMI: `ami-d9b661a6`
+* アプリケーションAMI: `ami-0ec5ab0a6192bf279`
 * ベンチマーカーAMI: `ami-78b66107`
 * アプリケーション、ベンチマーカー共に以下のスペック
   * Instance Type: c4.large
@@ -85,6 +85,7 @@ $ node index.js
 
 ```
 $ cd ~/webapp/crystal
+$ shards install
 $ crystal app.cr
 ```
 
