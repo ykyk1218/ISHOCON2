@@ -43,6 +43,7 @@ Options:
 
 	createClients(*workload * 5)
 	startBenchmark(*workload)
+	db.Close()
 }
 
 func startBenchmark(workload int) {
