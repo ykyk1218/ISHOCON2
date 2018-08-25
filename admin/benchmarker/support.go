@@ -42,6 +42,7 @@ func init() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	db.SetMaxIdleConns(3)
 }
 
 
