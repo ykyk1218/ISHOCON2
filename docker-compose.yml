@@ -9,11 +9,6 @@ services:
     ports:
       - "443:443"
 
-  storage_app:
-    image: busybox
-    volumes:
-      - /var/lib/mysql
-
   bench:
     image: showwin/ishocon2_bench:latest
     command: /docker/start_bench.sh
@@ -21,11 +16,6 @@ services:
       - storage_bench:/var/lib/mysql
     links:
       - app
-
-  storage_bench:
-    image: busybox
-    volumes:
-      - /var/lib/mysql
 
 volumes:
   storage_bench:
