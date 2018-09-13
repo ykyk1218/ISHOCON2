@@ -43,3 +43,4 @@ __pycache__/
 *.py.bak
 .DS_Store
 .python-version
+.idea
