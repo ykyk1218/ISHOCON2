@@ -1,42 +1,211 @@
-<img src="https://user-images.githubusercontent.com/1732016/41643273-b4994c02-74a5-11e8-950d-3a1c1e54f44f.png" width="250px">
-
-© [Chie Hayashi](https://www.facebook.com/hayashichie)
-
-# ISHOCON2
-iikanjina showwin contest 2nd (like ISUCON)  
-ISHOCONとは `Iikanjina SHOwwin CONtest` の略で、[ISUCON](http://isucon.net/)と同じように与えられたアプリケーションの高速化を競うコンテスト(?)です。  
-
-## 問題概要
-今回のテーマは「ネット選挙」です。  
-2016年9月現在、日本ではオンラインでの選挙はまだ実現されていませんが、近い将来にネット選挙が実現し、そのアプリケーションをあなたが実装することになるかもしれません。大量の投票に耐えられるようにアプリケーションチューニングの練習をしておきましょう。  
+# 問題概要
+今回のテーマは「ネット選挙」です。
+2019年12月現在、日本ではオンラインでの選挙はまだ実現されていませんが、近い将来にネット選挙が実現し、そのアプリケーションをあなたが実装することになるかもしれません。大量の投票に耐えられるようにアプリケーションチューニングの練習をしておきましょう。
 この選挙では1人1票ではなく、納税額によって各人投票できる票数が異なります。
 
 ![](https://raw.githubusercontent.com/showwin/ISHOCON2/master/doc/images/top.png)
 
-## 問題詳細
-* マニュアル: [ISHOCON2マニュアル](https://github.com/showwin/ISHOCON2/blob/master/doc/manual.md)
-* アプリケーションAMI: `ami-0ec5ab0a6192bf279`
-* ベンチマーカーAMI: `ami-78b66107`
-* インスタンスタイプ: `c4.large` (アプリ、ベンチ共に)
-* 参考実装言語: Ruby, Python, Go, PHP, NodeJS, Crystal
-* 推奨実施時間: 1人で8時間
+`/vote` から投票が可能です。例えば以下のユーザで投票ができます。
+* 氏名: `ウスイ シュンロウ`
+* 住所: `宮崎県`
+* 私の番号: `67895586`
+* 候補者: 誰かを選択する
+* 投票理由: 適当な文字列を記入する
+* 投票数: 89 以下の数字 (このユーザは89票の投票権を持っています)
 
-* AWSではなく手元で実行したい場合には [Docker を使ってローカルで環境を整える](https://github.com/showwin/ISHOCON2/blob/master/doc/local_manual.md) をご覧ください。
+**投票画面**
+![投票画面](https://raw.githubusercontent.com/showwin/ISHOCON2/master/doc/images/vote.png)
 
-## 関連リンク
-* [社内ISUCONでISHOCON2を使用するための手順まとめ](http://showwin.hatenablog.com/entry/2018/08/27/000108) (by [@showwin](https://twitter.com/showwin))
-  * ISHOCON2でISUCONイベントやる時の参考にしてください。
-* [ISHOCON2というISUCONの個人大会で惨敗してきました【優勝スコアと同等の参考実装付き】](https://serinuntius.hatenablog.jp/entry/2018/08/26/201418) (by [@_serinuntius](https://twitter.com/_serinuntius))
-  * ISHOCON2の最高得点の解説記事です。
-* [ISHOCON2に参加してきました](http://www.denzow.me/entry/2018/08/26/000949) (by [@denzowill](https://twitter.com/denzowill))
-  * ISHOCON2にPythonで取り組んだ記事です。
-* [ISHOCON2に参加して来たよ！](https://goryudyuma.hatenablog.jp/entry/2018/08/26/190411) (by [@Goryudyuma](https://twitter.com/Goryudyuma))
-  * ISHOCON2にCrystalで取り組んで、優勝余裕だろ！と思っていたら抜かれた記事です笑
-* [ISHOCON2のWriteup](https://owl-works.org/essay/entries/ishocon2_writeup) (by [@Owl_Works](https://twitter.com/Owl_Works))
-  * Top10入りしたISHOCON2のイベント参加記録です。
-* [ISHOCON2を意地でPythonで20万点だした](http://www.denzow.me/entry/2018/08/29/001136) (by [@denzowill](https://twitter.com/denzowill))
-  * Python実装で20万点超えていてすごい…
 
-## ISHOCONシリーズ
-* [ISHOCON1](https://github.com/showwin/ISHOCON1)
-* [ISHOCON2](https://github.com/showwin/ISHOCON2)
+# ローカル開発環境構築
+
+```
+git clone git@github.com:keisuke2236/ISHOCON2.git
+cd ISHOCON2
+docker-compose up -d
+```
+
+こんな表示が出たら起動完了です。
+
+```
+Starting ishocon2_app_1 ... done
+Starting ishocon2_bench_1 ... done
+```
+
+### 起動したアプリケーションサーバへの接続と設定
+このコマンドでサーバに入れます。
+
+```
+docker exec -it ishocon2_app_1 /bin/bash
+```
+
+アクセスすると２つのファイルがあると思います、dataは基本使いません（ダンプデータが入ってるだけです）
+
+- data
+- webapp
+
+webappの中から好きな言語を選択しましょう。
+
+言語: Ruby, Python, Go, PHP, NodeJS, Crystal
+
+言語を選んだら、このページの少し下にある<a href="#web-%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E3%82%92%E7%AB%8B%E3%81%A1%E4%B8%8A%E3%81%92%E3%82%8B">webサーバの立ち上げ方一覧</a>から選んだ言語の起動方法を探し実行してください。
+
+### ブラウザでの動作確認
+アプリケーションを起動したら以下のURLで動作を確認できます。
+httpsでしか見ることができないのでご注意ください
+
+```
+https://0.0.0.0/
+```
+
+
+### アプリケーションを早くしよう！
+webappディレクトリはdocker上にマウント済みです。
+mac上で webapp ディレクトリを変更すればローカルサーバーの内容が変更されます。
+
+デフォルトでマウントされているはずですが、されてない場合は各自で調整お願いします。
+`docker-compose.yml` の `app` でローカルの `webapp` ディレクトリをマウントすると、ローカルのファイル変更がdockerの中にもすぐに反映されるので便利です。
+```
+  app:
+    volumes:
+      - ./webapp:/home/ishocon/webapp
+```
+
+## ローカルでのベンチマーカー実行
+ターミナルで以下のコマンド実行すると現在のスコアが表示されます。
+変更後早くなったかどうかは確認しましょう。
+
+```
+docker exec -it ishocon2_bench_1 /bin/bash
+./benchmark --ip app:443
+```
+
+-------------
+
+# AWS上のリモートサーバへのアクセスと設定
+各チームに1台インスタンスを用意してます。
+
+PEMファイルとサーバー情報は各チームのプライベートチャンネルに貼ります。
+
+チームで利用する言語を相談し、決定後設定を行いサーバーを起動してください。
+
+## アプリケーションインスタンスにログインする
+
+```
+ssh -i ~/.ssh/team_name_key.pem ubuntu@xxx.xxx.xxx.xxx
+```
+
+### ishocon ユーザに切り替える
+```
+sudo su - ishocon
+```
+
+```
+ls
+ data    #DB初期化用のdump(後述)
+ webapp  #最適化するアプリケーション
+```
+
+### Web サーバーを立ち上げる
+
+#### Ruby の場合
+
+```
+cd ~/webapp/ruby
+unicorn -c unicorn_config.rb
+```
+
+#### Python の場合
+
+```
+cd ~/webapp/python
+uwsgi --ini app.ini
+```
+
+#### Go の場合
+
+```
+cd ~/webapp/go
+go get -t -d -v ./...
+go build -o webapp *.go
+./webapp
+```
+
+#### PHP の場合
+
+```
+cd ~/webapp/php
+cat README.md
+```
+
+#### NodeJS の場合
+
+```
+cd ~/webapp/nodejs
+npm install
+node index.js
+```
+
+#### Crystal の場合
+
+```
+cd ~/webapp/crystal
+shards install
+crystal app.cr
+```
+
+動作確認URL、証明書エラーは無視してください。
+
+https://0.0.0.0/
+
+# ベンチマーカーの挙動
+1分間の負荷走行によりスコアを算出しますが、リクエストのパターンが途中で切り替わります。
+
+1. `/initialize` にアクセスしてデータを初期化します。(10秒以内にレスポンスを返す必要があります)
+1. 期日前投票: 投票の結果が正しく結果表示ページに反映されていることを確認します。この間のリクエストはスコアには影響しません。
+1. 投票開始(45秒間): 投票が行われます。アプリケーションの高速化が十分でない場合、45秒を過ぎても数秒間投票が続くことがありますが、これはベンチマーカーの仕様です。
+1. 投票結果確認(15秒間): 投票結果の確認が行われます。投票時と同様に15秒を数秒過ぎてベンチマーカーが終わることがありますが、仕様です。
+
+### スコア算出方法
+* スコアはベンチマーカーが1分間の負荷走行を行っている間にレスポンスが返された `成功レスポンス数(GET) x 2 + 成功レスポンス数(POST) x 1 - 失敗レスポンス数(200以外) x 100` により算出されます。
+* 期日前投票にて、期待しないレスポンスが返ってきた場合にはその時点でベンチマーカーが停止し、スコアは表示されません。
+* 投票が1度でも失敗(200でないレスポンス)するとその時点でベンチマーカーが停止し、スコアは表示されません。投票は必ず成功する必要があります。
+
+
+## その他
+### 許されないこと
+* インスタンスを複数台用いることや、規定のインスタンスと別のタイプを使用すること。
+* ブラウザからアクセスして目視した場合に、初期実装と異なること。
+  * 目視で違いが分からなければOKです。
+* ベンチマーカーを改変すること。
+* ISHOCONと検索すること
+
+### 許されること
+* DOMを変更する
+  * ベンチマーカーにバレなければDOMを変更してもOKです。
+* 再起動に耐えられない
+  * インスタンスを再起動して、再起動前の状態を復元できる必要はありません。
+* 汎用的な高速化手法を検索すること
+
+## DBのつなぎ方
+3306 番ポートで MySQL(5.5) が起動しています。初期状態では以下のユーザが設定されています。
+* ユーザ名: ishocon, パスワード: ishocon
+* ユーザ名: root, パスワード: ishocon
+
+Mysqlへのアクセスはこれでできます
+
+```
+mysql -u ishocon -pishocon ishocon2
+```
+
+### Mysqlのデータを入れる時は....
+3306 番ポートで MySQL(5.5) が起動しています。初期状態では以下のユーザが設定されています。
+* ユーザ名: ishocon, パスワード: ishocon
+* ユーザ名: root, パスワード: ishocon
+
+初期データの挿入方法
+
+```
+mysql -u ishocon -pishocon ishocon2 < ./data/ishocon2.dump
+```
+"既存のMySQLを使う限りは"これを実行する必要はありません。
